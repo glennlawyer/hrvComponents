@@ -22,18 +22,28 @@ enum Stage {
 })
 export class BreathCircle {
 
-  // static components
+  /**
+   * static components
+   *
+   */
   breathCircle
   maxRadius: number = 112
   minRadius: number = 5
   inhaleColor: string = '#2AB321'
   exhaleColor: string = '#007ADD'
+  minRate: number = 500 // the minimum inhale/exhale rate
+  maxRate: number = 3 * 60 * 1000 // the maximum inhale/exhale rate
 
-  // User-settable attributes
-  // all times in miliseconds
-  // setting baseRate overrides inhale/exhale time
-  minRate: number = 500
-  maxRate: number = 3 * 60 * 1000
+  /**
+   * 2. Public API
+   * Sets the rate (in miliseconds) for each point in the cycle.
+   * Use baseRate to set/override inhale/exhale at once.
+   *
+   * All times in miliseconds
+   */
+  /**
+   * @Description foobar
+   **/
   @Prop() baseRate: number
   @Prop() inhaleTime: number = 4000
   @Prop() inhaleHoldTime: number = 500
