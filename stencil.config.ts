@@ -5,8 +5,8 @@ export const config: Config = {
   namespace: 'hrvcomponents',
   outputTargets: [
     {
-      type: 'dist',
-      esmLoaderPath: '../loader'
+      type: 'dist'
+      // esmLoaderPath: '../loader'
     },
     // {
     //   type: 'docs-readme'

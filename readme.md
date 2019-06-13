@@ -4,7 +4,9 @@ A collection of components for use in heart rate monitoring apps
 
 ## Usage -- web page
 Put this tag 
+```
 <script src='https://unpkg.com/FOOBAR@0.7.0/dist/myname.js'></script> 
+```
 in the head of your index.html
 
 ## Usage -- Ionic

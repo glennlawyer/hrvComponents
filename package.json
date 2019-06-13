@@ -1,6 +1,6 @@
 {
   "name": "hrvcomponents",
-  "version": "0.7.0",
+  "version": "0.7.3",
   "description": "Stencil Component Starter",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -11,8 +11,7 @@
   "collection:main": "dist/collection/index.js",
   "unpkg": "dist/hrvcomponents/hrvcomponents.js",
   "files": [
-    "dist/",
-    "loader/"
+    "dist/"
   ],
   "scripts": {
     "build": "stencil build --docs",
