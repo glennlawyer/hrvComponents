@@ -2,7 +2,7 @@ import { Component, h, Prop, State, Element, Watch } from '@stencil/core';
 
 import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
-import { interpolateHclLong } from 'd3-interpolate';
+import { interpolateCubehelix } from 'd3-interpolate';
 import { timeout } from 'd3-timer';
 // import { timer } from 'd3-timer';
 import { easeCubic } from 'd3-ease';
@@ -28,14 +28,14 @@ export class BreathCircle {
    */
   breathCircle
   maxRadius: number = 112
-  minRadius: number = 55
-  inhaleColor: string = '#2AB321'
-  exhaleColor: string = '#007ADD'
+  minRadius: number = 15
+  inhaleColor: string = '#00E71A' //'#2AB321'
+  exhaleColor: string = '#0072F3 '//'#007ADD'
   minTime: number = 500 // the minimum inhale/exhale rate
   minHoldTime: number = 100
   maxRate: number = 3 * 60 * 1000 // the maximum inhale/exhale/hold rate
   timerCount: number = 0
-  colorChangeTime:number = this.minTime
+  colorChangeTime:number = this.minTime + this.minHoldTime
   verbose: boolean = false
 
   /**
@@ -167,12 +167,12 @@ export class BreathCircle {
 
   inhaleToExScale = scaleLinear().domain([0,this.colorChangeTime])
     .range([this.inhaleColor, this.exhaleColor])
-    .interpolate(interpolateHclLong)
+    .interpolate(interpolateCubehelix)
     .clamp(true)
 
   exhaleToInScale = scaleLinear().domain([0,this.colorChangeTime])
     .range([this.exhaleColor, this.inhaleColor])
-    .interpolate(interpolateHclLong)
+    .interpolate(interpolateCubehelix)
     .clamp(true)
 
   mEase = easeCubic
@@ -190,8 +190,8 @@ export class BreathCircle {
     let sColor= hsl(color)
     let gstops = [
       { offset:   '0%', stopColor: sColor.brighter(3).hex() },
-      // { offset: extrabright ? '60%' : '50%',
-      //   stopColor: sColor.brighter(1).hex() },
+      { offset: extrabright ? '60%' : '50%',
+        stopColor: sColor.brighter(1).hex() },
       { offset: extrabright ? '80%' : '70%', stopColor: sColor.hex() },
       { offset: extrabright ? '118%' : '98%',
        stopColor: sColor.darker(0.5).hex() },
