@@ -2,7 +2,7 @@ import { Component, h, Prop, State, Element, Watch } from '@stencil/core';
 
 import { select } from 'd3-selection';
 import { transition } from 'd3-transition';
-import { interpolateHslLong } from 'd3-interpolate';
+import { interpolateHclLong } from 'd3-interpolate';
 import { timeout } from 'd3-timer';
 // import { timer } from 'd3-timer';
 import { easeCubic } from 'd3-ease';
@@ -28,11 +28,14 @@ export class BreathCircle {
    */
   breathCircle
   maxRadius: number = 112
-  minRadius: number = 5
+  minRadius: number = 55
   inhaleColor: string = '#2AB321'
   exhaleColor: string = '#007ADD'
-  minRate: number = 500 // the minimum inhale/exhale rate
-  maxRate: number = 3 * 60 * 1000 // the maximum inhale/exhale rate
+  minTime: number = 500 // the minimum inhale/exhale rate
+  minHoldTime: number = 100
+  maxRate: number = 3 * 60 * 1000 // the maximum inhale/exhale/hold rate
+  timerCount: number = 0
+  colorChangeTime:number = this.minTime
   verbose: boolean = false
 
   /**
@@ -46,15 +49,15 @@ export class BreathCircle {
    * @Description foobar
    **/
   @Prop() baseRate: number
-  @Prop() inhaleTime: number = 4000
-  @Prop() inhaleHoldTime: number = 500
-  @Prop() exhaleTime: number = 4000
-  @Prop() exhaleHoldTime: number = 500
+  @Prop() inhaleTime: number
+  @Prop() inhaleHoldTime: number
+  @Prop() exhaleTime: number
+  @Prop() exhaleHoldTime: number
   @Prop() isVerbose: boolean
 
   @Watch('baseRate')
   setBaseRate(newRate: number) {
-    if(newRate >= this.minRate && newRate <= this.maxRate){
+    if(newRate >= this.minTime && newRate <= this.maxRate){
       if(this.verbose){
         console.log( "changing base rate to", newRate )
       }
@@ -62,12 +65,12 @@ export class BreathCircle {
       this.exhaleTime = newRate
     } else {
       if(this.verbose) {
-        if(newRate < this.minRate) {
-          console.log( "Requested rate under min rate of ",
-            this.minRate, "request is ", newRate )
+        if(newRate < this.minTime) {
+          console.warn( "Requested rate under min rate of ",
+            this.minTime, "request is ", newRate )
         }
         if(newRate > this.maxRate) {
-          console.log( "Requested rate exceeds max rate of ",
+          console.warn( "Requested rate exceeds max rate of ",
             this.maxRate, "request is ", newRate )
         }
       }
@@ -75,19 +78,19 @@ export class BreathCircle {
   }
   @Watch('inhaleTime')
   setInhaleTime(newRate: number) {
-    if(newRate >= this.minRate && newRate <= this.maxRate){
+    if(newRate >= this.minTime && newRate <= this.maxRate){
       if(this.verbose){
         console.log( "changing inhale time to", newRate )
       }
       this.inhaleTime = newRate
     } else {
       if(this.verbose) {
-        if(newRate < this.minRate) {
-          console.log( "Requested rate under min rate of ",
-            this.minRate, "request is ", newRate )
+        if(newRate < this.minTime) {
+          console.warn( "Requested rate under min rate of ",
+            this.minTime, "request is ", newRate )
         }
         if(newRate > this.maxRate) {
-          console.log( "Requested rate exceeds max rate of ",
+          console.warn( "Requested rate exceeds max rate of ",
             this.maxRate, "request is ", newRate )
         }
       }
@@ -95,19 +98,19 @@ export class BreathCircle {
   }
   @Watch('inhaleHoldTime')
   setInhaleHoldTime(newRate: number) {
-    if(newRate >= this.minRate && newRate <= this.maxRate){
+    if(newRate >= this.minHoldTime && newRate <= this.maxRate){
       if(this.verbose){
         console.log( "changing inhale hold time to", newRate )
       }
       this.inhaleHoldTime = newRate
     } else {
       if(this.verbose) {
-        if(newRate < this.minRate) {
-          console.log( "Requested rate under min rate of ",
-            this.minRate, "request is ", newRate )
+        if(newRate < this.minTime) {
+          console.warn( "Requested rate under min rate of ",
+            this.minTime, "request is ", newRate )
         }
         if(newRate > this.maxRate) {
-          console.log( "Requested rate exceeds max rate of ",
+          console.warn( "Requested rate exceeds max rate of ",
             this.maxRate, "request is ", newRate )
         }
       }
@@ -115,19 +118,19 @@ export class BreathCircle {
   }
   @Watch('exhaleTime')
   setExhaleTime(newRate: number) {
-    if(newRate >= this.minRate && newRate <= this.maxRate){
+    if(newRate >= this.minTime && newRate <= this.maxRate){
       if(this.verbose){
         console.log( "changing exhale time to", newRate )
       }
       this.exhaleTime = newRate
     } else {
       if(this.verbose) {
-        if(newRate < this.minRate) {
-          console.log( "Requested rate under min rate of ",
-            this.minRate, "request is ", newRate )
+        if(newRate < this.minTime) {
+          console.warn( "Requested rate under min rate of ",
+            this.minTime, "request is ", newRate )
         }
         if(newRate > this.maxRate) {
-          console.log( "Requested rate exceeds max rate of ",
+          console.warn( "Requested rate exceeds max rate of ",
             this.maxRate, "request is ", newRate )
         }
       }
@@ -135,19 +138,19 @@ export class BreathCircle {
   }
   @Watch('exhaleHoldTime')
   setExhaleHoldTime(newRate: number) {
-    if(newRate >= this.minRate && newRate <= this.maxRate){
+    if(newRate >= this.minHoldTime && newRate <= this.maxRate){
       if(this.verbose){
         console.log( "changing exhale hold time rate to", newRate )
       }
       this.exhaleHoldTime = newRate
     } else {
       if(this.verbose) {
-        if(newRate < this.minRate) {
-          console.log( "Requested rate under min rate of ",
-            this.minRate, "request is ", newRate )
+        if(newRate < this.minTime) {
+          console.warn( "Requested rate under min rate of ",
+            this.minTime, "request is ", newRate )
         }
         if(newRate > this.maxRate) {
-          console.log( "Requested rate exceeds max rate of ",
+          console.warn( "Requested rate exceeds max rate of ",
             this.maxRate, "request is ", newRate )
         }
       }
@@ -156,25 +159,20 @@ export class BreathCircle {
   @Watch('isVerbose')
   setVerbose(newVal: boolean){
     console.log( "changing verbose to", newVal )
-    if(this.verbose){
-      console.log( "changing verbose to", newVal )
-    }
     this.verbose = newVal
   }
 
   // animation related variables
   @Element() svgElem: HTMLElement
-  timerCount: number = 0
-  colorChangeTime = 1000
 
   inhaleToExScale = scaleLinear().domain([0,this.colorChangeTime])
     .range([this.inhaleColor, this.exhaleColor])
-    .interpolate(interpolateHslLong)
+    .interpolate(interpolateHclLong)
     .clamp(true)
 
   exhaleToInScale = scaleLinear().domain([0,this.colorChangeTime])
     .range([this.exhaleColor, this.inhaleColor])
-    .interpolate(interpolateHslLong)
+    .interpolate(interpolateHclLong)
     .clamp(true)
 
   mEase = easeCubic
@@ -192,13 +190,11 @@ export class BreathCircle {
     let sColor= hsl(color)
     let gstops = [
       { offset:   '0%', stopColor: sColor.brighter(3).hex() },
-      // { offset:   '0%', stopColor: sColor.brighter(3).hex() },
-      { offset: extrabright ? '60%' : '50%',
-        stopColor: sColor.brighter(1).hex() },
-      // stopColor: sColor.brighter(1).hex() },
+      // { offset: extrabright ? '60%' : '50%',
+      //   stopColor: sColor.brighter(1).hex() },
       { offset: extrabright ? '80%' : '70%', stopColor: sColor.hex() },
       { offset: extrabright ? '118%' : '98%',
-        stopColor: sColor.darker(1).hex() },
+       stopColor: sColor.darker(0.5).hex() },
       { offset: extrabright ? '120%' : '100%',
         stopColor: sColor.darker(1.9).hex() }
     ]
@@ -207,13 +203,18 @@ export class BreathCircle {
 
 
   componentWillLoad(){
+    this.verbose = this.isVerbose
     if(this.verbose){
       console.log('Hello Breath Circle Component');
     }
     this.gradientStops = this.computeGradientStops(this.inhaleColor)
-    if(this.baseRate){
-      this.setBaseRate(this.baseRate)
-    }
+    // initialize variables. This will call the watchers.
+    if(this.baseRate){ this.setBaseRate(this.baseRate) }
+    // allow base rate to be overwritten
+    if(this.inhaleTime === undefined) { this.inhaleTime = 2000 }
+    if(this.inhaleHoldTime === undefined) { this.inhaleHoldTime = this.minHoldTime}
+    if(this.exhaleTime === undefined) { this.exhaleTime = 2000 }
+    if(this.exhaleHoldTime === undefined) { this.exhaleHoldTime = this.minHoldTime}
   }
 
   componentDidLoad(){
@@ -230,7 +231,7 @@ export class BreathCircle {
   // STATE MACHINE:
   //   Each function calls the next one in the lineup
   growCircle(){
-    let delay = Math.max(this.inhaleTime, this.colorChangeTime)
+    let delay = Math.max(this.inhaleTime, this.minTime)
     this.timerCount = 0 // safety
     this.changeColor(Stage.inhale)
     this.breathCircle.transition()
@@ -243,7 +244,7 @@ export class BreathCircle {
   }
 
   shrinkCircle(){
-    let delay = Math.max(this.inhaleTime, this.colorChangeTime)
+    let delay = Math.max(this.exhaleTime, this.minTime)
     this.timerCount = 0 // safety
     this.changeColor(Stage.exhale)
     this.breathCircle.transition()
@@ -258,7 +259,7 @@ export class BreathCircle {
 
   // transition the gradient
   changeColor(direction: Stage){
-    let timerInterval = 25
+    let timerInterval = 20
     if(this.timerCount < this.colorChangeTime) {
       this.timerCount += timerInterval
       this.adjustGradient(direction, this.timerCount)
