@@ -17,7 +17,7 @@ enum Stage {
 
 @Component({
   tag: 'breath-circle',
-  styleUrl: 'breath-circle.scss',
+  // styleUrl: 'breath-circle.scss',
   shadow: true
 })
 export class BreathCircle {
