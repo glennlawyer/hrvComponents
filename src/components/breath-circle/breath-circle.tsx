@@ -35,6 +35,7 @@ export class BreathCircle {
   minHoldTime: number = 100
   maxRate: number = 3 * 60 * 1000 // the maximum inhale/exhale/hold rate
   timerCount: number = 0
+  // colorChangeTime:number = 2000
   colorChangeTime:number = this.minTime + this.minHoldTime
   verbose: boolean = false
 
@@ -211,10 +212,11 @@ export class BreathCircle {
     // initialize variables. This will call the watchers.
     if(this.baseRate){ this.setBaseRate(this.baseRate) }
     // allow base rate to be overwritten
-    if(this.inhaleTime === undefined) { this.inhaleTime = 2000 }
+    if(this.inhaleTime === undefined) { this.setInhaleTime(2000) }
+    if(this.exhaleTime === undefined) { this.setExhaleTime(2000) }
     if(this.inhaleHoldTime === undefined) { this.inhaleHoldTime = this.minHoldTime}
-    if(this.exhaleTime === undefined) { this.exhaleTime = 2000 }
     if(this.exhaleHoldTime === undefined) { this.exhaleHoldTime = this.minHoldTime}
+    if(this.verbose){ this.printState() }
   }
 
   componentDidLoad(){
@@ -226,6 +228,12 @@ export class BreathCircle {
     let foo = transition
     foo()
     // end linter hack
+  }
+
+  printState(){
+    console.log( "inhale", this.inhaleTime, this.inhaleHoldTime)
+    console.log( "exhale", this.exhaleTime, this.exhaleHoldTime)
+    console.log( "color change", this.colorChangeTime )
   }
 
   // STATE MACHINE:
@@ -288,7 +296,7 @@ export class BreathCircle {
       <div class="breath-circle-wrapper">
       <svg id="svgObj" width="100%" viewBox="0 0 260 260" >
       <defs>
-      <radialGradient id="BreathGradient"  cx='52%' cy='52%' r='100%'>
+      <radialGradient id="BreathGradient"  cx='48%' cy='45%' r='100%'>
       {this.gradientStops.map(stop => {
         return (
           <stop
