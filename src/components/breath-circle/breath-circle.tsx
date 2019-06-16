@@ -241,6 +241,8 @@ export class BreathCircle {
   growCircle(){
     let delay = Math.max(this.inhaleTime, this.minTime)
     this.timerCount = 0 // safety
+    this.colorChangeTime = this.exhaleTime * 0.15
+    this.exhaleToInScale.domain([0,this.colorChangeTime])
     this.changeColor(Stage.inhale)
     this.breathCircle.transition()
       .duration(delay)
@@ -254,6 +256,8 @@ export class BreathCircle {
   shrinkCircle(){
     let delay = Math.max(this.exhaleTime, this.minTime)
     this.timerCount = 0 // safety
+    this.colorChangeTime = this.exhaleTime * 0.35
+    this.inhaleToExScale.domain([0,this.colorChangeTime])
     this.changeColor(Stage.exhale)
     this.breathCircle.transition()
       .duration(delay)
