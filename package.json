@@ -1,7 +1,15 @@
 {
   "name": "hrvcomponents",
   "version": "0.7.10",
-  "description": "Stencil Component Starter",
+  "description": "A collection of web components for use in meditation and HRV training apps.",
+  "license": "MIT",
+  "author" : {
+    "name": "Dr. Glenn Lawyer"
+  },
+  "repository": {
+    "type":"git",
+    "url":"https://github.com/glennlawyer/hrvComponents/"
+  },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "es2015": "dist/esm/index.mjs",
@@ -10,6 +18,8 @@
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
   "unpkg": "dist/hrvcomponents/hrvcomponents.js",
+  "homepage":"https://s3.eu-central-1.amazonaws.com/moodhealer.com/breathing/index.html",
+  "keywords": ["Breathing", "Breath Control", "Meditation","Timer", "HRV", "Heart Rate Variability"],
   "files": [
     "dist/"
   ],
