@@ -19,12 +19,13 @@ Install the package
 npm install --save hrvcomponents
 ```
 
-See the [Stencil docs] (https://stenciljs.com/docs/angular)
-for a walk-through of how to
+The main steps are:
 
 1. Include the `CUSTOM_ELEMENTS_SCHEMA` in the modules that use the components.
 2. Call `defineCustomElements(window)` from `main.ts` (or some other appropriate place).
 
+See the [Stencil docs](https://stenciljs.com/docs/angular)
+for a walk-through. 
 ## Other frameworks
 
 Install the package
@@ -40,7 +41,7 @@ import { defineCustomElements } from 'test-components/dist/loader';
 defineCustomElements(window);
 ```
 
-See details for your framework at the [Stencil docs] (https://stenciljs.com/docs/overview) under `Framework Integrations.` For example, in a Vue app, you may need to config ignored elements.
+See details for your framework at the [Stencil docs](https://stenciljs.com/docs/overview) under `Framework Integrations.` For example, in a Vue app, you may need to config ignored elements.
 
 
 # API
@@ -49,7 +50,7 @@ See details for your framework at the [Stencil docs] (https://stenciljs.com/docs
 
 The component is helpful for guiding breathing rates. It displays a circle which grows and shrinks at a controllable rate; you simply time your inhales/exhales to the growth/shrinking of the circle.
 
-[Demo it here] (https://s3.eu-central-1.amazonaws.com/moodhealer.com/breathing/index.html)
+[Demo it here](https://s3.eu-central-1.amazonaws.com/moodhealer.com/breathing/index.html)
 
 Examples:
 
@@ -81,4 +82,6 @@ Most properties set the time for the stages in the breathing cycle, in milliseco
 
 ----------------------------------------------
 
-*Built with [St
+*Built with [Stenciljs](stenciljs.com/docs/getting-started)*
+
+
